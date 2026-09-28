@@ -1,13 +1,29 @@
-﻿using System;
+using System;
 
 namespace Gün10
 {
-    public class Employee
+    public interface IWorkable
+    {
+        void Work();
+    }
+    public abstract class Company
+    {
+        public abstract int YearsWorked();
+    }
+    public class Employee : Company
     {
         private int salary;
         private string name;
         private decimal workHours;
+        public override int YearsWorked()
+        {
+            return 5;
+        }
 
+        public virtual decimal CalculateTotalPay()
+        {
+            return Salary;
+        }
         public int Salary
         {
             get
@@ -67,8 +83,12 @@ namespace Gün10
         }
     }
 
-    public class Developer : Employee
+    public class Developer : Employee, IWorkable
     {
+        public void Work()
+        {
+            Console.WriteLine("is working on Developer.");
+        }
         private string programmingLanguage;
 
         public string ProgrammingLanguage
@@ -89,7 +109,10 @@ namespace Gün10
                 programmingLanguage = value;
             }
         }
-
+        public override decimal CalculateTotalPay()
+        {
+            return Salary + 5000;
+        }
         public Developer(
             string name,
             int salary,
@@ -100,11 +123,15 @@ namespace Gün10
             ProgrammingLanguage = programmingLanguage;
         }
     }
-
-    public class Manager : Employee
+  
+    public class Manager : Employee, IWorkable
     {
         private int teamSize;
-
+        
+        public void Work()
+        {
+            Console.WriteLine("is working on Manager.");
+        }
         public int TeamSize
         {
             get
@@ -123,7 +150,10 @@ namespace Gün10
                 teamSize = value;
             }
         }
-
+        public override decimal CalculateTotalPay()
+        {
+            return Salary + 50000;
+        }
         public Manager(
             string name,
             int salary,
@@ -134,7 +164,7 @@ namespace Gün10
             TeamSize = teamSize;
         }
     }
-
+    
     internal class Program
     {
         static void Main(string[] args)
@@ -145,11 +175,18 @@ namespace Gün10
             Manager manager =
                 new Manager("Berkay", 60000, 40, 10);
 
+            Employee employee1 = new Developer("Berkay", 50000, 45, "C#");
+            Employee employee2 = new Manager("Berkay", 60000, 40, 10);
+
+            Console.WriteLine(employee1.CalculateTotalPay());
+            Console.WriteLine(employee2.CalculateTotalPay());
+
             Console.WriteLine(
                 $"Developer: {developer.Name}\n" +
                 $"Salary: {developer.Salary}\n" +
                 $"Work Hours: {developer.WorkHours}\n" +
-                $"Programming Language: {developer.ProgrammingLanguage}"
+                $"Programming Language: {developer.ProgrammingLanguage}\n" +
+                $"Bonus: {developer.CalculateTotalPay()}"
             );
 
             Console.WriteLine();
@@ -158,7 +195,8 @@ namespace Gün10
                 $"Manager: {manager.Name}\n" +
                 $"Salary: {manager.Salary}\n" +
                 $"Work Hours: {manager.WorkHours}\n" +
-                $"Team Size: {manager.TeamSize}"
+                $"Team Size: {manager.TeamSize}\n" +
+                $"Bonus: {manager.CalculateTotalPay()}"
             );
 
             Console.ReadLine();
